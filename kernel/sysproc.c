@@ -95,3 +95,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_strace(void)
+{
+  int stracemask;
+
+  if(argint(0, &stracemask) < 0){  
+    return -1;
+  }
+  myproc()->stracemask = stracemask;
+  return 0;
+}
