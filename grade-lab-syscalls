@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+import re
+from gradelib import *
+
+r = Runner(save("xv6.out"))
+
+@test(5, "strace 32 grep")
+def test_strace_32_grep():
+    r.run_qemu(shell_script([
+        'strace 32 grep hello README'
+    ]))
+    r.match('^\\d+: syscall read -> 1023')
+    r.match('^\\d+: syscall read -> 968')
+    r.match('^\\d+: syscall read -> 0')
+
+@test(5, "strace all grep")
+def test_strace_all_grep():
+    r.run_qemu(shell_script([
+        'strace 2147483647 grep hello README'
+    ]))
+    r.match('^\\d+: syscall strace -> 0')
+    r.match('^\\d+: syscall exec -> 3')
+    r.match('^\\d+: syscall open -> 3')
+    r.match('^\\d+: syscall read -> 1023')
+    r.match('^\\d+: syscall read -> 968')
+    r.match('^\\d+: syscall read -> 0')
+    r.match('^\\d+: syscall close -> 0')
+
+@test(5, "strace nothing")
+def test_strace_nothing():
+    r.run_qemu(shell_script([
+        'grep hello README'
+    ]))
+    r.match(no=[".* syscall .*"])
+
+@test(5, "strace children")
+def test_strace_children():
+    r.run_qemu(shell_script([
+        'strace 2 usertests forkforkfork'
+    ]))
+    r.match('3: syscall fork -> 4')
+    r.match('^5: syscall fork -> \\d+')
+    r.match('^6: syscall fork -> \\d+')
+    r.match('^\\d+: syscall fork -> -1')
+    r.match('^ALL TESTS PASSED')
+
+
+run_tests()
+
+
+
