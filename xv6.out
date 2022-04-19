@@ -4,6 +4,7 @@ xv6 kernel is booting
 hart 2 starting
 hart 1 starting
 init: starting sh
+
 $ strace 2 usertests forkforkfork
 usertests starting
 3: syscall fork -> 4
@@ -74,3 +75,4 @@ OK
 3: syscall fork -> 66
 ALL TESTS PASSED
 $ qemu-system-riscv64: terminating on signal 15 from pid 114430 (make)
+
