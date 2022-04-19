@@ -1,7 +1,7 @@
-
 # To compile and run with a lab solution, set the lab name in lab.mk
-# (e.g., LAB=util).  Run make grade to test solution with the lab's
-# grade script (e.g., grade-lab-util).
+# (e.g., LAB=syscalls).  Run make grade to test solution with the lab's
+# grade script (e.g., grade-lab-syscalls).
+
 
 -include conf/lab.mk
 
@@ -193,6 +193,10 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+
+	$U/_strace\
+
+
 	$U/_sleep\
 	$U/_pingpong\
 	$U/_find\
@@ -248,6 +252,7 @@ ifeq ($(LAB),fs)
 UPROGS += \
 	$U/_bigfile
 endif
+
 
 
 
@@ -310,6 +315,7 @@ qemu-gdb: $K/kernel .gdbinit fs.img
 	@echo "*** Now run 'gdb' in another window." 1>&2
 	$(QEMU) $(QEMUOPTS) -S $(QEMUGDB)
 
+
 ifeq ($(LAB),net)
 # try to generate a unique port for the echo server
 SERVERPORT = $(shell expr `id -u` % 5000 + 25099)
@@ -332,10 +338,12 @@ endif
 print-gdbport:
 	@echo $(GDBPORT)
 
+	
+	
 grade:
 	@echo $(MAKE) clean
 	@$(MAKE) clean || \
-          (echo "'make clean' failed.  HINT: Do you have another running instance of xv6?" && exit 1)
+	  (echo "'make clean' failed.  HINT: Do you have another running instance of xv6?" && exit 1)
 	./grade-lab-$(LAB) $(GRADEFLAGS)
 
 ##
@@ -409,3 +417,4 @@ myapi.key:
 
 
 .PHONY: handin tarball tarball-pref clean grade handin-check
+
