@@ -198,6 +198,8 @@ UPROGS=\
 	$U/_find\
 	$U/_xargs\
 	$U/_primes\
+	$U/_mmap\
+	$U/_munmap\
 
 ifeq ($(LAB),$(filter $(LAB), pgtbl lock))
 UPROGS += \

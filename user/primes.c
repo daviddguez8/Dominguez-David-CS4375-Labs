@@ -51,8 +51,6 @@ piping_primes(int p) {
     close(new_pipe[1]);
     close(p);
     wait(0);//wait for children to finish
-    
-    
   }
   exit(0);
 }

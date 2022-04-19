@@ -23,6 +23,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int mmap(void); //TODO: ADD CORRECT PARAMETERS
+int munmap(void); //TODO: ADD CORRECT PARAMETERS
 
 // ulib.c
 int stat(const char*, struct stat*);
