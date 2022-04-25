@@ -2,31 +2,6 @@ struct stat;
 struct rtcdate;
 
 // system calls
-<<<<<<< HEAD
-int fork(void);
-int exit(int) __attribute__((noreturn));
-int wait(int*);
-int pipe(int*);
-int write(int, const void*, int);
-int read(int, void*, int);
-int close(int);
-int kill(int);
-int exec(char*, char**);
-int open(const char*, int);
-int mknod(const char*, short, short);
-int unlink(const char*);
-int fstat(int fd, struct stat*);
-int link(const char*, const char*);
-int mkdir(const char*);
-int chdir(const char*);
-int dup(int);
-int getpid(void);
-char* sbrk(int);
-int sleep(int);
-int uptime(void);
-int mmap(void); //TODO: ADD CORRECT PARAMETERS
-int munmap(void); //TODO: ADD CORRECT PARAMETERS
-=======
 int fork(void); //1
 int exit(int) __attribute__((noreturn)); //2
 int wait(int*); //3
@@ -49,7 +24,8 @@ char* sbrk(int); //12
 int sleep(int); //13
 int uptime(void); //14
 int strace(int); //22
->>>>>>> d2ceabe08ace3f854ce65023121265019166eb34
+int mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset); //TODO: ADD CORRECT PARAMETERS
+int munmap(void *addr, size_t length); //TODO: ADD CORRECT PARAMETERS
 
 // ulib.c
 int stat(const char*, struct stat*);

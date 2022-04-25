@@ -36,9 +36,6 @@ entry("getpid");
 entry("sbrk");
 entry("sleep");
 entry("uptime");
-<<<<<<< HEAD
+entry("strace");
 entry("mmap");
 entry("munmap");
-=======
-entry("strace");
->>>>>>> d2ceabe08ace3f854ce65023121265019166eb34

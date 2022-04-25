@@ -54,6 +54,7 @@ procinit(void)
       initlock(&p->lock, "proc");
       p->kstack = KSTACK((int) (p - proc));
   }
+  p->cur_max = (MAX_MMR - 2) / PGSIZE;
 }
 
 // Must be called with interrupts disabled,
