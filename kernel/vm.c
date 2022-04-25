@@ -65,7 +65,7 @@ void *mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset) 
     if(!(p_file->writable) && (prot & PROT_WRITE)) {
       //If the file is not writtable
       //and user wants to write to it, return error
-      return "ERROR PERMISSIONS";
+      printf("ERROR PERMISSIONS");
     }
   }  
 
@@ -76,7 +76,7 @@ void *mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset) 
   struct mmregion *free_region = 0;
   //look for first empty slot (mr) in mmr
   for(int i = 0; i< MAX_MMR; i++) {
-    if ( p->mmr[i].valid == 0) {
+    if ( p->mmr[i].valid == 0 ) {
       //Found a free spot
       free_region = p->mmr;
       break;
