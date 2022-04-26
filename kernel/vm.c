@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <sys/mman.h>
-
 #include "param.h"
 #include "types.h"
 #include "memlayout.h"
@@ -56,13 +51,14 @@ kvmmake(void)
   return kpgtbl;
 }
 
-void *mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset) {
+uint64
+mmap(void *addr, uint64 length, int prot, int flags, int f, uint64 offset) {
   struct proc *p = myproc();
   struct file *p_file = p->ofile[f];
 
   //CHECK FOR FILE PERMISSIONS
-  if(flags & MAP_SHARED) {
-    if(!(p_file->writable) && (prot & PROT_WRITE)) {
+  if(flags & 4) { //map shared is 4
+    if(!(p_file->writable) && (prot & 2)) { //prot write is 2
       //If the file is not writtable
       //and user wants to write to it, return error
       printf("ERROR PERMISSIONS");
@@ -102,18 +98,16 @@ void *mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset) 
 
     //in order to point to the next available page
     p->cur_max = start_addr; 
-  }
-
-  else{
+  } else {
     //return error
-    return "ERROR MAPPING";
+    return 0xffffffffffffffff;
   }
   
   return start_addr;
 }
 
-int munmap(void *addr, size_t length) {
-
+int munmap(void *addr, uint64 length) {
+  return 0;
 }
 
 // Initialize the one kernel_pagetable

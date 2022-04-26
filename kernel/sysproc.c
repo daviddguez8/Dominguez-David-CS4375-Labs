@@ -9,6 +9,15 @@
 
 uint64
 sys_mmap(void) {
+  uint64 addr;
+  int length;
+  int prot;
+  int flags;
+  int f;
+  int offset;
+
+  if(argaddr(0, &addr) < 0)
+    return -1;
   return -1;
 }
 
