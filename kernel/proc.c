@@ -119,6 +119,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->cur_max = MAXVA - 2*PGSIZE;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -309,6 +310,36 @@ fork(void)
 
   acquire(&wait_lock);
   np->parent = p;
+  //copy the mapped regions from parent to child
+  //copy the mapped regions from parent to child
+  for (int i=0; i<MAX_MMR; i++) {
+    if (p->mmr[i].valid == 1) {
+      
+      struct mmregion *parent = 0;
+      parent = &p->mmr[i];
+
+      // find one available from child.
+      struct mmregion *child = 0;
+      for (int j=0; j<MAX_MMR; j++) {
+        if (np->mmr[j].valid == 0) {
+          child = &np->mmr[j];
+          break;
+        }
+      }
+      if (child) {
+        child->valid = 1;
+        child->start_addr = parent->start_addr;
+        child->end_addr = parent->end_addr;
+        child->length = parent->length;
+        child->prot = parent->prot;
+        child->flags = parent->flags;
+        child->fd = parent->fd;
+        //parent_file->ref++;
+
+        
+      }
+    }
+  }
   release(&wait_lock);
 
   acquire(&np->lock);

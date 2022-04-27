@@ -65,6 +65,51 @@ usertrap(void)
     intr_on();
 
     syscall();
+  } else if(r_scause() == 13 || r_scause() == 15) {
+    //fault cause where related to paging
+    
+    //figure out the virtual address that caused the fault
+    uint64 faulting_addr = r_stval();
+    struct mmregion *faulting_region = 0;
+    //find out what page withing the process mapped pages
+    //contains the faulting address
+    for (int i = 0; i < MAX_MMR; i++) {
+      if(p->mmr[i].valid == 1 && 
+        (faulting_addr >= p->mmr[i].start_addr)&& 
+        (faulting_addr <= p->mmr[i].end_addr) ) {
+        //if this mapped region contains the faulting address save it
+        faulting_region = &p->mmr[i];
+        break;
+      }
+    }
+
+    if(faulting_region == 0) {
+      //no region was found in the process' mapped regions
+      printf("Faulting address is not part of the process' mapped regions");
+      //kill the process?
+      p->killed = 1;
+      exit(-1);
+    }
+    
+    //using alloc we can allocate a page of physical memory
+    void *page = kalloc();
+    //kalloc returns 0 on error
+    if(page == 0){
+      panic("kalloc");
+    }
+
+    //initialize page to 0s
+    memset(page, 0, PGSIZE); 
+    
+    uint64 faulting_addr_start = PGROUNDDOWN(faulting_addr);
+    
+    if (mappages(p->pagetable, faulting_addr_start, PGSIZE, (uint64)page, faulting_region->prot | PTE_U) != 0) {
+      //mapped pages return 0 on success, -1 otherwise
+      kfree(page);
+      p->killed = 1;
+      exit(-1);
+    }
+    
   } else if((which_dev = devintr()) != 0){
     // ok
   } else {

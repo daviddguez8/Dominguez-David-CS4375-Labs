@@ -1,3 +1,5 @@
+#define MAX_MMR 20
+
 // Saved registers for kernel context switches.
 struct context {
   uint64 ra;
@@ -80,6 +82,19 @@ struct trapframe {
   /* 280 */ uint64 t6;
 };
 
+
+
+struct mmregion { 
+  uint64 start_addr; 
+  uint64 end_addr;
+  int length;
+  int prot;
+  int flags;
+  int valid;
+  struct file *file; 
+  int fd;
+};
+
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state
@@ -105,4 +120,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+
+  struct mmregion mmr[MAX_MMR];
+  uint64 cur_max;  // initialize to MAXVA – 2*PGSIZE
 };

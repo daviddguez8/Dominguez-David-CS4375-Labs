@@ -484,3 +484,100 @@ sys_pipe(void)
   }
   return 0;
 }
+
+uint64
+sys_mmap(void) {
+  //TODO: GET PARAMETERS FROM ARGADDR ARGINT
+  uint64 addr;
+  uint64 length;
+  int prot;
+  int flags;
+  int f;
+  uint64 offset;
+
+  if(
+    (argaddr(0, &addr) < 0) || 
+    (argaddr(1, &length) < 0) ||
+    (argint(2, &prot) < 0) ||
+    (argint(3, &flags) < 0) ||
+    (argint(4, &f) < 0) ||
+    (argaddr(5, &offset) < 0))
+    return -1;
+  
+
+  struct proc *p = myproc();
+  
+
+  uint64 cur_max = p->cur_max;
+  //get new_start address by rounding down to the next page (cur_size - lengt)
+  uint64 start_addr = PGROUNDDOWN(cur_max - length);
+  
+  struct mmregion *free_region = 0;
+  //look for first empty slot (mr) in mmr
+  for(int i = 0; i< MAX_MMR; i++) {
+    if ( p->mmr[i].valid == 0 ) {
+      //Found a free spot
+      free_region = p->mmr;
+      break;
+    }
+  }
+
+  
+  //if available mapping:
+  if(free_region) {
+  
+    //populate the virtual mapping mr
+    free_region->start_addr = start_addr;
+    free_region->end_addr = cur_max;
+    free_region->length = cur_max - start_addr;
+    free_region->prot = prot;
+    free_region->flags = flags;
+    free_region-> valid = 1;
+    free_region->fd = f;
+
+    //in order to point to the next available page
+    p->cur_max = start_addr; 
+  } else {
+    //return error
+    return 0xffffffffffffffff;
+  }
+  
+  return start_addr;
+}
+
+uint64
+sys_munmap(void) {
+  uint64 addr;
+  uint64 length;
+
+  //fetch arguments
+  if(
+    (argaddr(0, &addr) < 0) || 
+    (argaddr(1, &length) < 0))
+    return -1;
+
+
+  struct proc *p = myproc();
+  
+  //get start_addr by rounding it down
+  uint64 start_addr = PGROUNDDOWN(addr);
+
+  //end address will be start_address + length
+  uint64 end_addr = PGROUNDDOWN(start_addr + length);
+
+  //find the valid mapped region that contains these addresses
+  struct mmregion *unmapping_region = 0;
+  for (int i = 0; i < MAX_MMR; i++) {
+    if(p->mmr[i].valid == 1 && 
+      (start_addr >= p->mmr[i].start_addr)&& 
+      (end_addr <= p->mmr[i].end_addr) ) {
+      //if this mapped region contains the faulting address save it
+      unmapping_region = &p->mmr[i];
+      break;
+    }
+  }
+
+  if(!unmapping_region) {
+    return 
+  }
+}
