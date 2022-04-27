@@ -1,11 +1,11 @@
-struct spinlock;
-struct sleeplock;
 struct buf;
 struct context;
 struct file;
 struct inode;
 struct pipe;
 struct proc;
+struct spinlock;
+struct sleeplock;
 struct stat;
 struct superblock;
 
@@ -170,8 +170,6 @@ uint64          walkaddr(pagetable_t, uint64);
 int             copyout(pagetable_t, uint64, char *, uint64);
 int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
-uint64          mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset);
-int             munmap(void *addr, size_t length);
 
 // plic.c
 void            plicinit(void);

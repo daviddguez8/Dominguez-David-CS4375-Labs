@@ -5,8 +5,6 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
-#include "proc.h"
-#include "file.h"
 
 /*
  * the kernel's page table.
@@ -437,65 +435,4 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
   } else {
     return -1;
   }
-}
-
-uint64
-mmap(void *addr, size_t length, int prot, int flags, int f, off_t offset) {
-  return 0;
-  /*
-  struct proc *p = myproc();
-  struct file *p_file = p->ofile[f];
-
-  //CHECK FOR FILE PERMISSIONS
-  if(flags & 4) { //map shared is 4
-    if(!(p_file->writable) && (prot & 2)) { //prot write is 2
-      //If the file is not writtable
-      //and user wants to write to it, return error
-      printf("ERROR PERMISSIONS");
-    }
-  }  
-
-  uint64 cur_max = p->cur_max;
-  //get new_start address by rounding down to the next page (cur_size - lengt)
-  uint64 start_addr = PGROUNDDOWN(cur_max - length);
-  
-  struct mmregion *free_region = 0;
-  //look for first empty slot (mr) in mmr
-  for(int i = 0; i< MAX_MMR; i++) {
-    if ( p->mmr[i].valid == 0 ) {
-      //Found a free spot
-      free_region = p->mmr;
-      break;
-    }
-  }
-
-  
-  //if available mapping:
-  if(free_region) {
-  
-    //populate the virtual mapping mr
-    free_region->start_addr = start_addr;
-    free_region->end_addr = cur_max;
-    free_region->length = length;
-    free_region->prot = prot;
-    free_region->flags = flags;
-    free_region-> valid = 1;
-    free_region ->fd = f;
-    free_region -> file = p_file;
-
-    //Increase the references to this file
-    p_file->ref++;
-
-    //in order to point to the next available page
-    p->cur_max = start_addr; 
-  } else {
-    //return error
-    return 0xffffffffffffffff;
-  }
-  
-  return start_addr;*/
-}
-
-int munmap(void *addr, size_t length) {
-  return 0;
 }
