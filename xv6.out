@@ -4,18 +4,6 @@ xv6 kernel is booting
 hart 1 starting
 hart 2 starting
 init: starting sh
-<<<<<<< HEAD
-$ sh < xargstest.sh
-$ echo DONE
-$ $ $ $ $ hello
-grep: cannot open 2
-hello
-grep: cannot open 2
-hello
-grep: cannot open 2
-$ $ DONE
-qemu-system-riscv64: terminating on signal 15 from pid 14548 (make)
-=======
 
 $ strace 2 usertests forkforkfork
 usertests starting
@@ -88,4 +76,3 @@ OK
 ALL TESTS PASSED
 $ qemu-system-riscv64: terminating on signal 15 from pid 114430 (make)
 
->>>>>>> d2ceabe08ace3f854ce65023121265019166eb34
