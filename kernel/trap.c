@@ -86,9 +86,12 @@ usertrap(void)
     //find out what page withing the process mapped pages
     //contains the faulting address
     for (int i = 0; i < MAX_MMR; i++) {
-      if(p->mmr[i].valid == 1 && (p->mmr[i].start_addr <= faulting_addr) && (p->mmr[i].end_addr >= faulting_addr) ) {
+      if(p->mmr[i].valid == 1 && 
+        (faulting_addr >= p->mmr[i].start_addr)&& 
+        (faulting_addr <= p->mmr[i].end_addr) ) {
         //if this mapped region contains the faulting address save it
         faulting_region = &p->mmr[i];
+        break;
       }
     }
 
@@ -119,9 +122,9 @@ usertrap(void)
       exit(-1);
     }
     
-    //we want to start reading at offset
+    //we want to start reading file at offset
     int offset = faulting_addr_start - faulting_region->start_addr;
-    mmap_read(faulting_region->file, faulting_addr_start, offset, PGSIZE);
+    read_from_offset(faulting_region->file, faulting_addr_start, offset, PGSIZE);
 
   } else if((which_dev = devintr()) != 0){
     // ok

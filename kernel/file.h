@@ -31,7 +31,6 @@ struct file {
 
 
 
-
 // map major device number to device functions.
 struct devsw {
   int (*read)(int, uint64, int);

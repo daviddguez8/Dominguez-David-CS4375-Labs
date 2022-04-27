@@ -20,9 +20,6 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
-<<<<<<< HEAD
-#define SYS_mmap   22
-#define SYS_munmap 23
-=======
 #define SYS_strace 22
->>>>>>> d2ceabe08ace3f854ce65023121265019166eb34
+#define SYS_mmap   23
+#define SYS_munmap 24

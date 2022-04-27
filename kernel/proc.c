@@ -314,6 +314,35 @@ fork(void)
 
   acquire(&wait_lock);
   np->parent = p;
+  //copy the mapped regions from parent to child
+  for (int I=0; I<100; I++) {
+    if (p->mmr[I].valid == 1) {
+      struct mmregion *parent = 0;
+      parent = &p->mmr[I];
+      // find one available from child.
+      struct mmregion *child = 0;
+      for (int j=0; j<100; j++) {
+        if (np->mmr[j].valid == 0) {
+          child = &np->mmr[j];
+          break;
+        }
+      }
+      if (child) {
+        child->valid = 1;
+        child->start_addr = parent->start_addr;
+        child->end_addr = parent->end_addr;
+        child->length = parent->length;
+        child->prot = parent->prot;
+        child->flags = parent->flags;
+        child->fd = parent->fd;
+        child->file = parent->file;
+        struct file *parent_file = parent->file;
+        //parent_file->ref++;
+
+        
+      }
+    }
+  }
   release(&wait_lock);
 
   acquire(&np->lock);
