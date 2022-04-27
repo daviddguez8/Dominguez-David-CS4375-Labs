@@ -521,7 +521,6 @@ sys_mmap(void) {
       break;
     }
   }
-
   
   //if available mapping:
   if(free_region) {
@@ -534,6 +533,7 @@ sys_mmap(void) {
     free_region->flags = flags;
     free_region-> valid = 1;
     free_region->fd = f;
+    free_region->pid = p->pid;
 
     //in order to point to the next available page
     p->cur_max = start_addr; 
@@ -578,6 +578,44 @@ sys_munmap(void) {
   }
 
   if(!unmapping_region) {
-    return 
+    printf("Error, region couldn't be found in user address space for address: %p length: %p", addr, length);
+    return -1;
   }
+
+  //walk the user's address table to get the appropriate pte
+  //one you have it, unmap it from the user address space
+  pte_t *to_unmap;
+  for(int i = start_addr; i <= end_addr; i+=PGSIZE){
+    if((to_unmap = (pte_t *) walkaddr(p->pagetable, i)) == 0) {
+      if(*to_unmap & PTE_V) {
+        uvmunmap(p->pagetable, i, PGSIZE, 0);
+      }
+    }
+  }
+
+  //there are 3 possible cases
+
+  //the unmapped pages were at the start of the mapped memory region
+  if (unmapping_region->start_addr == start_addr && end_addr < unmapping_region->end_addr) {
+    unmapping_region->start_addr = end_addr;
+    unmapping_region->length -= end_addr-start_addr;
+  }
+  //the unmapped pages were at the end of the mapped memory region
+  else if (unmapping_region->start_addr < start_addr && end_addr == unmapping_region->end_addr){
+    unmapping_region->end_addr = start_addr - 1;
+    unmapping_region->length = end_addr - start_addr;
+  }
+  //the unmapped pages were the whole mapped region
+  else if (unmapping_region->start_addr == start_addr && unmapping_region->end_addr == end_addr) {
+    unmapping_region->start_addr = 0;
+    unmapping_region->end_addr = 0;
+    unmapping_region->length = 0;
+    unmapping_region->prot = 0;
+    unmapping_region->flags = 0;
+    unmapping_region-> valid = 0;
+    unmapping_region->fd = 0;
+    unmapping_region->pid = 0;
+  }
+
+  return 0;
 }

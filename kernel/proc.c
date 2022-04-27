@@ -151,20 +151,38 @@ found:
 static void
 freeproc(struct proc *p)
 {
-  if(p->trapframe)
-    kfree((void*)p->trapframe);
-  p->trapframe = 0;
-  if(p->pagetable)
-    proc_freepagetable(p->pagetable, p->sz);
-  p->pagetable = 0;
-  p->sz = 0;
-  p->pid = 0;
-  p->parent = 0;
-  p->name[0] = 0;
-  p->chan = 0;
-  p->killed = 0;
-  p->xstate = 0;
-  p->state = UNUSED;
+  /********** add the line below *****************/
+ int dofree = 0;
+/*******************************************/
+
+
+ if(p->trapframe)
+   kfree((void*)p->trapframe);
+ p->trapframe = 0;
+
+
+/******** add the lines below ******************/
+ for (int i = 0; i < MAX_MMR; i++) {
+   if (p->mmr[i].valid == 1) {
+     if (p->mmr[i].pid == p->pid)
+       dofree = 1;
+     for (uint64 addr = p->mmr[i].start_addr; addr < p->mmr[i].start_addr + p->mmr[i].length; addr += PGSIZE)
+       if (walkaddr(p->pagetable, addr))
+         uvmunmap(p->pagetable, addr, 1, dofree);
+   }
+ }
+/******************************************/
+ if(p->pagetable)
+   proc_freepagetable(p->pagetable, p->sz);
+ p->pagetable = 0;
+ p->sz = 0;
+ p->pid = 0;
+ p->parent = 0;
+ p->name[0] = 0;
+ p->chan = 0;
+ p->killed = 0;
+ p->xstate = 0;
+ p->state = UNUSED;
 }
 
 // Create a user page table for a given process,

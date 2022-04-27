@@ -93,6 +93,7 @@ struct mmregion {
   int valid;
   struct file *file; 
   int fd;
+  int pid;
 };
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };

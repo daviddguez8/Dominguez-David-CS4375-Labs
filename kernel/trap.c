@@ -66,7 +66,7 @@ usertrap(void)
 
     syscall();
   } else if(r_scause() == 13 || r_scause() == 15) {
-    //fault cause where related to paging
+    //fault cause was related to paging
     
     //figure out the virtual address that caused the fault
     uint64 faulting_addr = r_stval();
