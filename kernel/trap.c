@@ -97,7 +97,6 @@ usertrap(void)
     if(page == 0){
       panic("kalloc");
     }
-
     //initialize page to 0s
     memset(page, 0, PGSIZE); 
     

@@ -33,6 +33,10 @@ int consumer() {
 int main() {
     buffer = (int *) mmap(0, BUF_SIZE*sizeof(int), PROT_READ | PROT_WRITE, 
                           MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+
+    for (int i = 0; i<BUF_SIZE;i++) {
+        buffer[i] = 0;
+    }
     if (!buffer) {
         printf("Error: mmap() failed\n");
         exit(-1);
