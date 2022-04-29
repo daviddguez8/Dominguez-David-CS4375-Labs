@@ -8,3 +8,7 @@ typedef unsigned int  uint32;
 typedef unsigned long uint64;
 
 typedef uint64 pde_t;
+typedef uint64 sem_t;
+
+
+

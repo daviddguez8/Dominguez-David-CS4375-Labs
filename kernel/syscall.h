@@ -22,3 +22,8 @@
 #define SYS_close  21
 #define SYS_mmap   22
 #define SYS_munmap 23
+#define SYS_sem_init 24
+#define SYS_sem_destroy 25
+#define SYS_sem_wait 26
+#define SYS_sem_post 27
+
