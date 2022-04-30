@@ -18,29 +18,41 @@
 int *buffer;
 
 void producer() {
-    for (int i=0; i<BUF_SIZE; i++)
+    for (int i=0; i<BUF_SIZE; i++) {
+        printf("parent assigning address %p\n", &buffer[i]);
         buffer[i] = i;
+    }
     return;
 }
 
 int consumer() {
     int sum = 0;
-    for (int i=0; i<BUF_SIZE; i++)
+    for (int i=0; i<BUF_SIZE; i++) {
+        printf("child reading address: %p\n", &buffer[i]);
         sum += buffer[i];
+    }
+        
     return(sum);
 }
 
 int main() {
+    printf("it runs...\n");
     buffer = (int *) mmap(0, BUF_SIZE*sizeof(int), PROT_READ | PROT_WRITE, 
                           MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 
-    for (int i = 0; i<BUF_SIZE;i++) {
-        buffer[i] = 0;
-    }
+    
     if (!buffer) {
         printf("Error: mmap() failed\n");
         exit(-1);
     }
+
+    printf("it maps...\n");
+    for (int i = 0; i<BUF_SIZE;i++) {
+        printf("assigning %d\n", i);
+        buffer[i] = 0;
+    }
+
+    printf("lets fork\n");
     int rc = fork();
     if (!rc) {
         producer();

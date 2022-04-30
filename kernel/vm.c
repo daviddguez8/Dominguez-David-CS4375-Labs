@@ -302,7 +302,7 @@ uvmfree(pagetable_t pagetable, uint64 sz)
 // returns 0 on success, -1 on failure.
 // frees any allocated pages on failure.
 int
-uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
+uvmcopy(pagetable_t old, pagetable_t new, uint64 sz, uint64 cur_max)
 {
   pte_t *pte;
   uint64 pa, i;
@@ -324,6 +324,16 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
       goto err;
     }
   }
+  /*
+  for(int i = cur_max; i<MAXVA-2*PGSIZE; i+=PGSIZE) {
+    if( (pte = walk(old, i, 0)) && (*pte & PTE_V) ) {
+      pa = PTE2PA(*pte);
+      flags = PTE_FLAGS(*pte);
+      if(mappages(new, i, PGSIZE, (uint64)pa, flags) != 0) goto err;
+    }
+  }
+  */
+
   return 0;
 
  err:
