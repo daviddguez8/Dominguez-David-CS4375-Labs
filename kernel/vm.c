@@ -308,7 +308,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz, uint64 cur_max)
   uint64 pa, i;
   uint flags;
   char *mem;
-
+  
   for(i = 0; i < sz; i += PGSIZE){
     if((pte = walk(old, i, 0)) == 0)
       panic("uvmcopy: pte should exist");
@@ -324,15 +324,16 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz, uint64 cur_max)
       goto err;
     }
   }
-  /*
-  for(int i = cur_max; i<MAXVA-2*PGSIZE; i+=PGSIZE) {
+  
+  for(i = cur_max; i<MAXVA-2*PGSIZE; i+=PGSIZE) {
     if( (pte = walk(old, i, 0)) && (*pte & PTE_V) ) {
       pa = PTE2PA(*pte);
       flags = PTE_FLAGS(*pte);
       if(mappages(new, i, PGSIZE, (uint64)pa, flags) != 0) goto err;
     }
   }
-  */
+
+  
 
   return 0;
 

@@ -620,22 +620,4 @@ sys_munmap(void) {
   return 0;
 }
 
-uint64
-sys_sem_init(void) {
-  return -1;
-}
-
-uint64
-sys_sem_destroy(void) {
-  return -1;
-}
-
-uint64
-sys_sem_wait(void) {
-  return -1;
-}
-
-uint64 sys_sem_post(void) {
-  return -1;
-}
 

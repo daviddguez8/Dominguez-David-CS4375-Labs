@@ -40,15 +40,16 @@ int main() {
     buffer = (int *) mmap(0, BUF_SIZE*sizeof(int), PROT_READ | PROT_WRITE, 
                           MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 
+
     
     if (!buffer) {
         printf("Error: mmap() failed\n");
         exit(-1);
     }
 
-    printf("it maps...\n");
+    printf("it maps... mapped to: %p\n", buffer);
     for (int i = 0; i<BUF_SIZE;i++) {
-        printf("assigning %d\n", i);
+        printf("assigning %d to position %p\n", i, &buffer[i]);
         buffer[i] = 0;
     }
 

@@ -25,7 +25,7 @@ int sleep(int);
 int uptime(void);
 void *mmap(void *addr, uint64 length, int prot, int flags, int f, uint64 offset);
 int munmap(void *addr, uint64 length);
-int sem_init(sem_t *sem, int pshared, unsigned int value);
+int sem_init(sem_t *sem, int pshared, uint64 value);
 int sem_destroy(sem_t *sem);
 int sem_wait(sem_t *sem);
 int sem_post(sem_t *sem);

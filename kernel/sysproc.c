@@ -95,3 +95,49 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_sem_init(void) {
+  sem_t sem;
+  int pshared;
+  int value;
+
+
+  if((argaddr(0, &sem) < 0)) return -1;
+
+  if((argint(1, &pshared) < 0)) return -1;
+
+  if(pshared != 1) return -1;
+  
+  if((argint(2, &value) < 0)) return -1;
+    
+  
+  return sem_init(sem, pshared, value);
+}
+
+uint64
+sys_sem_destroy(void) {
+
+  sem_t sem;
+  
+  if(argaddr(0, &sem) < 0) return -1;
+
+  return sem_destroy(sem);
+}
+
+uint64
+sys_sem_wait(void) {
+  sem_t sem;
+  
+  if(argaddr(0, &sem) < 0) return -1;
+
+  return sem_wait(sem);
+}
+
+uint64 sys_sem_post(void) {
+  sem_t sem;
+  
+  if(argaddr(0, &sem) < 0) return -1;
+
+  return sem_post(sem);
+}
