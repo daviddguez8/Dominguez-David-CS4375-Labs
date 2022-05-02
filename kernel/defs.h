@@ -188,10 +188,10 @@ void            virtio_disk_intr(void);
 void            seminit(void);
 uint64          semalloc(void);
 int             semdealloc(uint64);
-int             sem_init(sem_t, int, int);
-int             sem_destroy(sem_t);
-int             sem_wait(sem_t);
-int             sem_post(sem_t);
+int             sem_init(sem_t *, int, int);
+int             sem_destroy(sem_t *);
+int             sem_wait(sem_t *);
+int             sem_post(sem_t *);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))

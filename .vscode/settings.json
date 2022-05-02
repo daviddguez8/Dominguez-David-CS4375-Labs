@@ -2,6 +2,7 @@
     "files.associations": {
         "spinlock.h": "c",
         "param.h": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "stat.h": "c"
     }
 }

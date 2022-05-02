@@ -1,19 +1,8 @@
 #include "kernel/types.h"
 #include "kernel/stat.h"
 #include "user/user.h"
-
+#include "kernel/fcntl.h"
 #define BUF_SIZE 10
-
-/* 
- * VALUES FOUND IN mman.h definitions
-*/
-#define PROT_READ        0x1                /* Page can be read.  */
-#define PROT_WRITE        0x2                /* Page can be written.  */
-
-# define MAP_ANONYMOUS        0x20                /* Don't use a file.  */
-
-#define MAP_SHARED        0x01                /* Share changes.  */
-#define MAP_PRIVATE        0x02                /* Changes are private.  */
 
 int *buffer;
 

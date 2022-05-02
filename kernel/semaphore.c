@@ -52,7 +52,7 @@ semdealloc(uint64 s_idx) {
 
 
 int 
-sem_init(sem_t sem, int pshared, int value) {
+sem_init(sem_t *sem, int pshared, int value) {
     printf("called");
     struct proc *p = myproc();
 
@@ -71,7 +71,7 @@ sem_init(sem_t sem, int pshared, int value) {
 }
 
 int 
-sem_destroy(sem_t sem) {
+sem_destroy(sem_t *sem) {
     struct proc *p = myproc();
 
     uint64 sem_idx;
@@ -91,7 +91,7 @@ sem_destroy(sem_t sem) {
 //decrement the value of semaphore s by one 
 // wait if value of semaphore s is < 0
 int 
-sem_wait(sem_t sem) {
+sem_wait(sem_t *sem) {
 
     struct proc *p = myproc();
 
@@ -109,13 +109,13 @@ sem_wait(sem_t sem) {
     semtable.sem[sem_idx].count-=1;
     release(&semtable.sem[sem_idx].lock);
 
-    return -1;
+    return 0;
 }
 
 //increment the value of semaphore s by one
 //if there are one or more threads waiting, wake one
 int 
-sem_post(sem_t sem) {
+sem_post(sem_t *sem) {
     struct proc *p = myproc();
 
     uint64 sem_idx;
@@ -128,8 +128,8 @@ sem_post(sem_t sem) {
 
     acquire(&semtable.sem[sem_idx].lock);
     semtable.sem[sem_idx].count+=1;
-    wakeup(sem);
+    wakeup((void*)sem);
     release(&semtable.sem[sem_idx].lock);
 
-    return -1;
+    return 0;
 }
