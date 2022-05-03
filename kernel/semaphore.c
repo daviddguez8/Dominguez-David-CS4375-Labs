@@ -52,18 +52,19 @@ semdealloc(uint64 s_idx) {
 
 
 int 
-sem_init(sem_t *sem, int pshared, int value) {
-    printf("called");
+sem_init(sem_t sem, int pshared, int value) {
+    printf("called\n\n");
     struct proc *p = myproc();
 
     uint64 available_idx = semalloc();
-
+    
     if(available_idx < 0) return -1;
 
     semtable.sem[available_idx].count = value;
     
     if(copyout(p->pagetable, sem, (char*)&available_idx, sizeof(uint64)) < 0) 
     {
+        
         semdealloc(available_idx);
         return -1;
     }
@@ -71,7 +72,7 @@ sem_init(sem_t *sem, int pshared, int value) {
 }
 
 int 
-sem_destroy(sem_t *sem) {
+sem_destroy(sem_t sem) {
     struct proc *p = myproc();
 
     uint64 sem_idx;
@@ -91,7 +92,7 @@ sem_destroy(sem_t *sem) {
 //decrement the value of semaphore s by one 
 // wait if value of semaphore s is < 0
 int 
-sem_wait(sem_t *sem) {
+sem_wait(sem_t sem) {
 
     struct proc *p = myproc();
 
@@ -115,7 +116,7 @@ sem_wait(sem_t *sem) {
 //increment the value of semaphore s by one
 //if there are one or more threads waiting, wake one
 int 
-sem_post(sem_t *sem) {
+sem_post(sem_t sem) {
     struct proc *p = myproc();
 
     uint64 sem_idx;
