@@ -8,8 +8,9 @@ int *buffer;
 
 void producer() {
     for (int i=0; i<BUF_SIZE; i++) {
-        printf("parent assigning address %p\n", &buffer[i]);
+        
         buffer[i] = i;
+        printf("parent assigning address %p, read %d\n", &buffer[i], buffer[i]);
     }
     return;
 }
@@ -17,7 +18,7 @@ void producer() {
 int consumer() {
     int sum = 0;
     for (int i=0; i<BUF_SIZE; i++) {
-        printf("child reading address: %p\n", &buffer[i]);
+        printf("child reading address: %p, read %d\n", &buffer[i], buffer[i]);
         sum += buffer[i];
     }
         
@@ -30,17 +31,14 @@ int main() {
                           MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 
 
-    
+    producer();
     if (!buffer) {
         printf("Error: mmap() failed\n");
         exit(-1);
     }
 
     printf("it maps... mapped to: %p\n", buffer);
-    for (int i = 0; i<BUF_SIZE;i++) {
-        printf("assigning %d to position %p\n", i, &buffer[i]);
-        buffer[i] = 0;
-    }
+    
 
     printf("lets fork\n");
     int rc = fork();
